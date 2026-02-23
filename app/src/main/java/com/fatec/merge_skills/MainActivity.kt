@@ -33,13 +33,17 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                     composable("login") {
+                        val authViewModel = androidx.lifecycle.viewmodel.compose.viewModel<com.fatec.merge_skills.ui.screens.auth.AuthViewModel>()
                         LoginScreen(
+                            viewModel = authViewModel,
                             onNavigateToRegister = { navController.navigate("register") },
                             onLoginSuccess = { navController.navigate("aula07") }
                         )
                     }
                     composable("register") {
+                        val authViewModel = androidx.lifecycle.viewmodel.compose.viewModel<com.fatec.merge_skills.ui.screens.auth.AuthViewModel>()
                         RegisterScreen(
+                            viewModel = authViewModel,
                             onNavigateBack = { navController.popBackStack() }
                         )
                     }

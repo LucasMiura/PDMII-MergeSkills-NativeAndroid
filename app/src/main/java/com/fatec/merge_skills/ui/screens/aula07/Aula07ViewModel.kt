@@ -2,6 +2,7 @@ package com.fatec.merge_skills.ui.screens.aula07
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fatec.merge_skills.data.remote.ApiConfig
 import com.fatec.merge_skills.data.remote.KtorClient
 import com.fatec.merge_skills.domain.models.PostInfo
 import io.ktor.client.call.body
@@ -34,7 +35,7 @@ class Aula07ViewModel : ViewModel() {
             try {
                 // Suspende a execução (fora da Main Thread de UI) aguardando o Backend
                 val response: List<PostInfo> = KtorClient.httpClient
-                    .get("https://jsonplaceholder.typicode.com/posts")
+                    .get(ApiConfig.Endpoints.POSTS)
                     .body()
                 
                 // Sucesso: popula a lista de posts e retira o Loading

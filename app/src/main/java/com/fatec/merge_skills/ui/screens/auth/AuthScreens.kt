@@ -13,6 +13,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -20,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -62,11 +64,20 @@ fun SplashScreen(onSplashFinished: () -> Unit) {
 
 @Composable
 fun LoginScreen(
+    viewModel: AuthViewModel,
     onNavigateToRegister: () -> Unit,
     onLoginSuccess: () -> Unit
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    val uiState by viewModel.uiState.collectAsState()
+
+    // Observa o sucesso da Autenticação através da Coroutine
+    LaunchedEffect(uiState.isSuccess) {
+        if (uiState.isSuccess) {
+            onLoginSuccess()
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -85,7 +96,10 @@ fun LoginScreen(
 
         OutlinedTextField(
             value = email,
-            onValueChange = { email = it },
+            onValueChange = { 
+                email = it
+                viewModel.resetError() // Limpa o erro se tentar digitar novo user
+            },
             label = { Text("E-mail") },
             leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) },
             modifier = Modifier.fillMaxWidth(),
@@ -104,13 +118,29 @@ fun LoginScreen(
             singleLine = true
         )
 
+        if (uiState.errorMessage != null) {
+            Text(
+                text = uiState.errorMessage!!,
+                color = MaterialTheme.colorScheme.error,
+                modifier = Modifier.padding(top = 16.dp)
+            )
+        }
+
         Button(
-            onClick = onLoginSuccess,
+            onClick = { viewModel.login(email, password) },
+            enabled = !uiState.isLoading,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 32.dp)
         ) {
-            Text("Acessar Plataforma")
+            if (uiState.isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(24.dp),
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
+            } else {
+                Text("Acessar Plataforma")
+            }
         }
 
         TextButton(
@@ -123,10 +153,22 @@ fun LoginScreen(
 }
 
 @Composable
-fun RegisterScreen(onNavigateBack: () -> Unit) {
+fun RegisterScreen(
+    viewModel: AuthViewModel,
+    onNavigateBack: () -> Unit
+) {
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    val uiState by viewModel.uiState.collectAsState()
+
+    // Voltamos para o login após o cadastro com sucesso
+    LaunchedEffect(uiState.isSuccess) {
+        if (uiState.isSuccess) {
+            viewModel.resetSuccess()
+            onNavigateBack()
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -145,7 +187,10 @@ fun RegisterScreen(onNavigateBack: () -> Unit) {
 
         OutlinedTextField(
             value = name,
-            onValueChange = { name = it },
+            onValueChange = { 
+                name = it
+                viewModel.resetError()
+            },
             label = { Text("Nome Completo") },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true
@@ -172,13 +217,29 @@ fun RegisterScreen(onNavigateBack: () -> Unit) {
             singleLine = true
         )
 
+        if (uiState.errorMessage != null) {
+            Text(
+                text = uiState.errorMessage!!,
+                color = MaterialTheme.colorScheme.error,
+                modifier = Modifier.padding(top = 16.dp)
+            )
+        }
+
         Button(
-            onClick = onNavigateBack,
+            onClick = { viewModel.register(name, email, password) },
+            enabled = !uiState.isLoading,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 32.dp)
         ) {
-            Text("Criar Conta")
+            if (uiState.isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(24.dp),
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
+            } else {
+                Text("Criar Conta")
+            }
         }
 
         TextButton(

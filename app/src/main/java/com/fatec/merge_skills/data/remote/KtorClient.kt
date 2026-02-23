@@ -9,15 +9,15 @@ import kotlinx.serialization.json.Json
 /**
  * Cliente HTTP Base configurado com Ktor.
  * 
- * Este arquivo abstrai o motor nativo (Android) e aplica o negociador de conteúdo (JSON)
- * permitindo ignorar chaves desconhecidas da API.
+ * Este Singleton fornece a instância pré-configurada do HttpClient
+ * para ser injetada ou utilizada diretamente pelos ViewModels.
  */
 object KtorClient {
     val httpClient = HttpClient(Android) {
         install(ContentNegotiation) {
             json(Json {
-                ignoreUnknownKeys = true // Se a API enviar campos extras, não dá crash
-                isLenient = true // Aceita JSON mal formatado em alguns casos
+                ignoreUnknownKeys = true 
+                isLenient = true 
             })
         }
     }
