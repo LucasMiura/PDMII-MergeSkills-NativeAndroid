@@ -17,6 +17,7 @@ fun LoginScreen() {
     var password by remember { mutableStateOf("") }
 
     Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
                 title = { Text("Merge Skills LDDM", color = MaterialTheme.colorScheme.onPrimary) },
@@ -36,9 +37,8 @@ fun LoginScreen() {
         ) {
             Text(
                 text = "Welcome Back",
-                fontSize = 28.sp,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary,
+                style = MaterialTheme.typography.headlineLarge,
+                color = MaterialTheme.colorScheme.onBackground,
                 modifier = Modifier.padding(bottom = 32.dp)
             )
 
