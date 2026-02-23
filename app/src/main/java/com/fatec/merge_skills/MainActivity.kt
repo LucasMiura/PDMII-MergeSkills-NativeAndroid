@@ -10,6 +10,8 @@ import androidx.navigation.compose.rememberNavController
 import com.fatec.merge_skills.ui.screens.auth.LoginScreen
 import com.fatec.merge_skills.ui.screens.auth.RegisterScreen
 import com.fatec.merge_skills.ui.screens.auth.SplashScreen
+import com.fatec.merge_skills.ui.screens.aula07.Aula07Screen
+import com.fatec.merge_skills.ui.screens.aula07.Aula07ViewModel
 import com.fatec.merge_skills.ui.theme.MergeskillskotlinTheme
 
 class MainActivity : ComponentActivity() {
@@ -33,13 +35,19 @@ class MainActivity : ComponentActivity() {
                     composable("login") {
                         LoginScreen(
                             onNavigateToRegister = { navController.navigate("register") },
-                            onLoginSuccess = { /* TODO: Navigate to Home Content */ }
+                            onLoginSuccess = { navController.navigate("aula07") }
                         )
                     }
                     composable("register") {
                         RegisterScreen(
                             onNavigateBack = { navController.popBackStack() }
                         )
+                    }
+                    composable("aula07") {
+                        // Instanciando ViewModel manualmente por enquanto.
+                        // Na Aula 09 usaremos o Koin ( koinViewModel() )
+                        val viewModel = androidx.lifecycle.viewmodel.compose.viewModel<Aula07ViewModel>()
+                        Aula07Screen(viewModel = viewModel)
                     }
                 }
             }
