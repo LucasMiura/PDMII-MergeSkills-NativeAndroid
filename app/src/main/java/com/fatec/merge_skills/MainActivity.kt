@@ -4,11 +4,12 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.ui.Modifier
-import com.fatec.merge_skills.ui.screens.aula05.Aula05Screen
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.fatec.merge_skills.ui.screens.auth.LoginScreen
+import com.fatec.merge_skills.ui.screens.auth.RegisterScreen
+import com.fatec.merge_skills.ui.screens.auth.SplashScreen
 import com.fatec.merge_skills.ui.theme.MergeskillskotlinTheme
 
 class MainActivity : ComponentActivity() {
@@ -17,8 +18,29 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MergeskillskotlinTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Aula05Screen(modifier = Modifier.padding(innerPadding))
+                val navController = rememberNavController()
+
+                NavHost(navController = navController, startDestination = "splash") {
+                    composable("splash") {
+                        SplashScreen(
+                            onSplashFinished = {
+                                navController.navigate("login") {
+                                    popUpTo("splash") { inclusive = true }
+                                }
+                            }
+                        )
+                    }
+                    composable("login") {
+                        LoginScreen(
+                            onNavigateToRegister = { navController.navigate("register") },
+                            onLoginSuccess = { /* TODO: Navigate to Home Content */ }
+                        )
+                    }
+                    composable("register") {
+                        RegisterScreen(
+                            onNavigateBack = { navController.popBackStack() }
+                        )
+                    }
                 }
             }
         }
