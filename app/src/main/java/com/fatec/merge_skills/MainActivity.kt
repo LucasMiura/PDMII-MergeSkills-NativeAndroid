@@ -8,11 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import com.fatec.merge_skills.ui.screens.aula04.Aula04DetailScreen
-import com.fatec.merge_skills.ui.screens.aula04.Aula04HomeScreen
+import com.fatec.merge_skills.ui.screens.aula05.Aula05Screen
 import com.fatec.merge_skills.ui.theme.MergeskillskotlinTheme
 
 class MainActivity : ComponentActivity() {
@@ -21,26 +17,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MergeskillskotlinTheme {
-                val navController = rememberNavController()
-
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    NavHost(
-                        navController = navController,
-                        startDestination = "home",
-                        modifier = Modifier.padding(innerPadding)
-                    ) {
-                        composable("home") {
-                            Aula04HomeScreen(
-                                onNavigateToDetails = { navController.navigate("details") }
-                            )
-                        }
-                        
-                        composable("details") {
-                            Aula04DetailScreen(
-                                onNavigateBack = { navController.popBackStack() }
-                            )
-                        }
-                    }
+                    Aula05Screen(modifier = Modifier.padding(innerPadding))
                 }
             }
         }
