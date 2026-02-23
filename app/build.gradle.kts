@@ -57,7 +57,6 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     
     // Compose
-    implementation(platform(libs.androidx.compose.ui))
     implementation(libs.compose.ui)
     implementation(libs.compose.ui.tooling.preview)
     implementation(libs.androidx.material3)
