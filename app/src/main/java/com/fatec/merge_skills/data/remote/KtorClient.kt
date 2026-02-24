@@ -1,6 +1,5 @@
 package com.fatec.merge_skills.data.remote
 
-import android.net.http.HttpResponseCache.install
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
 import io.ktor.client.plugins.DefaultRequest
