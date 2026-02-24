@@ -10,8 +10,6 @@ import com.fatec.merge_skills.domain.models.RegisterRequest
 import io.ktor.client.call.body
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
-import io.ktor.http.ContentType
-import io.ktor.http.contentType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -33,13 +31,13 @@ class AuthViewModel : ViewModel() {
             try {
                 val requestBody = LoginRequest(email = email, password = pass)
                 val response: AuthResponse = KtorClient.httpClient.post(ApiConfig.Endpoints.LOGIN) {
-                    contentType(ContentType.Application.Json)
                     setBody(requestBody)
                 }.body()
 
                 // Sucesso: API retornou o objeto AuthResponse (token + user)
                 _uiState.value = AuthUiState(isSuccess = true)
             } catch (e: Exception) {
+                e.printStackTrace() // Logar o erro real para depuração (Logcat)
                 _uiState.value = AuthUiState(
                     isLoading = false,
                     errorMessage = "Erro ao entrar: Verifique suas credenciais."
@@ -54,13 +52,13 @@ class AuthViewModel : ViewModel() {
             try {
                 val requestBody = RegisterRequest(name = name, email = email, password = pass)
                 val response: AuthResponse = KtorClient.httpClient.post(ApiConfig.Endpoints.REGISTER) {
-                    contentType(ContentType.Application.Json)
                     setBody(requestBody)
                 }.body()
 
                 // Sucesso: API criou o usuário e retornou AuthResponse
                 _uiState.value = AuthUiState(isSuccess = true)
             } catch (e: Exception) {
+                e.printStackTrace() // Logar o erro real para depuração (Logcat)
                 _uiState.value = AuthUiState(
                     isLoading = false,
                     errorMessage = "Erro ao cadastrar: E-mail já existe ou falha na rede."
