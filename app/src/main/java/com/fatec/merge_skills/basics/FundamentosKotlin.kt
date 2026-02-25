@@ -2,169 +2,265 @@ package com.fatec.merge_skills.basics
 
 /**
  * ==========================================================
- * AULA 01 - FUNDAMENTOS DE KOTLIN (NIVELAMENTO PARA INICIANTES)
+ * AULA 01 - FUNDAMENTOS DE KOTLIN
+ * Referência: https://fatec-registro-yuri-villanova.github.io/docs/DSM5%20%7C%20PDMII/1.%20Fundamentos/
  * ==========================================================
- * 
- * Antes de mergulharmos no Jetpack Compose e na confecção de Telas, 
- * precisamos entender a linguagem nativa oficial do Android: O Kotlin.
- * 
- * Este arquivo não é executado diretamente no aplicativo, mas serve como 
- * material didático de consulta para você entender as regras do jogo.
+ *
+ * Este arquivo serve como material didático de referência.
+ * Cada seção cobre um conceito fundamental da linguagem Kotlin
+ * que será utilizado ao longo do curso de Android Nativo.
  */
 
-// ---------------------------------------------------------
-// 1. VARIÁVEIS, MUTABILIDADE E TIPAGEM
-// ---------------------------------------------------------
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 1. VAL E VAR — VARIÁVEIS MUTÁVEIS E IMUTÁVEIS
+// ─────────────────────────────────────────────────────────────────────────────
+// A regra de ouro no Kotlin é preferir `val` sempre que possível.
+// `val` é de somente leitura — não pode ser reatribuída.
+// `var` pode ter seu valor alterado ao longo do tempo.
+
 fun entendendoVariaveis() {
-    // 'val' (Value): É uma variável IMUTÁVEL. Seu valor não pode ser alterado depois de assinalado.
-    // É recomendável usar 'val' na maior parte do tempo por segurança.
-    val nomeDoCurso = "Merge Skills: Android Nativo"
-    // nomeDoCurso = "Outro Curso" // ERRO DE COMPILAÇÃO!
+    // val (Value): variável IMUTÁVEL
+    val pi: Double = 3.14
+    val nomeDoCurso = "Merge Skills: Android Nativo"   // Inferência de tipo
 
-    // 'var' (Variable): É uma variável MUTÁVEL. O seu valor PODE mudar livremente (desde que seja do mesmo tipo).
-    var versaoDoApp = 1
-    versaoDoApp = 2 // OK!
+    // var (Variable): variável MUTÁVEL
+    var count: Int = 0
+    count = 1 // Permitido
 
-    // Tipagem Forte e Inferência
-    // O Kotlin adivinha o tipo sozinho, mas você pode declará-lo explicitamente se quiser:
+    // pi = 3.14159  // ERRO de compilação — val não pode ser reatribuída
+    // nomeDoCurso = "Outro"  // ERRO de compilação
+
+    // Tipagem explícita vs. inferência
     val cargaHoraria: Int = 40
     val valorDaMensalidade: Double = 99.90
     val possuiCertificado: Boolean = true
     val inicialDoNome: Char = 'M'
 }
 
-// ---------------------------------------------------------
-// 2. NULABILIDADE (NULL SAFETY)
-// ---------------------------------------------------------
-// No Kotlin, quem avisa é amigo. Variáveis normais NÃO PODEM receber "null".
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 2. NULL SAFETY — PROTEÇÃO CONTRA NULLPOINTEREXCEPTION
+// ─────────────────────────────────────────────────────────────────────────────
+// Um dos recursos mais importantes do Kotlin é o sistema de tipos nulos.
+// Referências Non-nullable NÃO aceitam null.
+// Referências Nullable precisam do operador `?` para serem declaradas.
+// Para usar uma variável nullable com segurança, use `?.` ou `?:`.
+
 fun lidandoComNulos() {
-    // Isso gera erro na hora (diferente do Java onde dá Crash no cliente = NullPointerException):
-    // var nomeProfessor: String = null 
+    var nome: String = "João"           // Non-nullable: nunca pode ser null
+    var sobrenome: String? = null       // Nullable: pode ser null
 
-    // Se uma variável *puder* ser nula (Ex: usuário não preencheu o campo),
-    // usamos o sinal de interrogação `?` após o Tipo:
+    // Safe Call `?.`: só executa se sobrenome não for nulo
+    val tamanho: Int? = sobrenome?.length
+
+    // Elvis Operator `?:`: retorna valor padrão caso a variável seja nula
+    val tamanhoNaoNulo: Int = sobrenome?.length ?: 0
+
+    // Exemplo do projeto: campo de GitHub do usuário
     var githubDoProfessor: String? = null
-    
-    // Agora para usar, o Kotlin te OBRIGA a tratar:
-    // Opção A: Safe Call `?.` (Só executa se não for nulo)
-    val letras = githubDoProfessor?.length 
-
-    // Opção B: Operador Elvis `?:` (Se for nulo, use um valor padrão)
     val linkSeguro = githubDoProfessor ?: "Não Cadastrado"
 }
 
-// ---------------------------------------------------------
-// 3. CONTROLE DE FLUXO E MÉTODOS NATIVOS (IF e WHEN)
-// ---------------------------------------------------------
-fun checarAprovacao(notaMedia: Double) {
-    // O Bom e velho IF existe aqui, mas a grande sacada é que IFs
-    // no Kotlin retornam valor (podem agir como variáveis)!
-    val status = if (notaMedia >= 7.0) {
-        "Aprovado"
-    } else {
-        "Reprovado"
-    }
 
-    // "When" é o Switch Case "bombado" do Kotlin
-    when (notaMedia) {
-        10.0 -> println("Aluno Perfeito!")
-        in 7.0..9.9 -> println("Aprovado com folga")
-        else -> println("Precisamos estudar mais")
-    }
+// ─────────────────────────────────────────────────────────────────────────────
+// 3. FUNÇÕES
+// ─────────────────────────────────────────────────────────────────────────────
+// Blocos de código que realizam uma tarefa específica.
+// Declaradas com a palavra-chave `fun`.
+
+// Função tradicional com parâmetros e retorno
+fun sayHello(name: String) {
+    println("Olá, $name!")
 }
 
-// ---------------------------------------------------------
-// 4. ESTRUTURAS DE REPETIÇÃO (LOOPS e FOREACH)
-// ---------------------------------------------------------
-fun testandoLoops() {
-    val tecnologias = listOf("Kotlin", "Jetpack Compose", "Coroutines", "Koin")
+// Sintaxe de expressão (single-expression function)
+fun somarModerno(a: Int, b: Int) = a + b
 
-    // Loop "For" Tradicional
+// Função com valores padrão nos parâmetros
+fun saudar(nome: String, saudacao: String = "Olá") {
+    println("$saudacao, $nome!")
+}
+
+// Exemplo de uso
+fun exemploFuncoes() {
+    sayHello("Kotlin")            // Olá, Kotlin!
+    val resultado = somarModerno(3, 5)  // 8
+    saudar("Maria")               // Olá, Maria!
+    saudar("Pedro", "Oi")         // Oi, Pedro!
+}
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 4. CONTROLE DE FLUXO — IF, WHEN E LOOPS
+// ─────────────────────────────────────────────────────────────────────────────
+fun controleDeFluxo(notaMedia: Double) {
+    // IF como expressão (retorna valor)
+    val status = if (notaMedia >= 7.0) "Aprovado" else "Reprovado"
+
+    // WHEN: o Switch-Case potente do Kotlin
+    when (notaMedia) {
+        10.0           -> println("Aluno Perfeito!")
+        in 7.0..9.9    -> println("Aprovado com folga")
+        else           -> println("Precisamos estudar mais")
+    }
+
+    // FOR em coleção
+    val tecnologias = listOf("Kotlin", "Jetpack Compose", "Coroutines", "Koin")
     for (tech in tecnologias) {
         println("Aprenderemos: $tech")
     }
 
-    // Uma forma mais limpa usando o forEach (Programação Funcional)
-    tecnologias.forEach { tech ->
-        println("Listando: $tech")
-    }
-
-    // Loop While comum
+    // WHILE
     var i = 0
-    while(i < 3) {
+    while (i < 3) {
         println("Contando $i")
         i++
     }
 }
 
-// ---------------------------------------------------------
-// 5. FUNÇÕES E SINTAXE ENXUTA
-// ---------------------------------------------------------
-// Funcão tradicional
-fun somarIdades(idadeA: Int, idadeB: Int): Int {
-    return idadeA + idadeB
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 5. COLEÇÕES — LIST, SET, MAP
+// ─────────────────────────────────────────────────────────────────────────────
+// Kotlin oferece coleções ricas. A maioria é imutável por padrão,
+// incentivando código mais seguro.
+
+fun exemploColecoes() {
+    // ── LIST: coleção ordenada, permite duplicatas ──────────────────────────
+    val nomes = listOf("João", "Maria", "Pedro")    // Imutável
+    val notas = mutableListOf(8, 7, 9)              // Mutável
+    notas.add(10)                                   // [8, 7, 9, 10]
+
+    // ── SET: coleção de itens únicos, desordenada ────────────────────────────
+    val frutas = setOf("Maçã", "Banana", "Morango", "Maçã")
+    // frutas conterá apenas "Maçã", "Banana", "Morango" (sem duplicata)
+
+    // ── MAP: pares chave-valor, chaves únicas ────────────────────────────────
+    // Mapa Imutável
+    val idades = mapOf("João" to 30, "Maria" to 25)
+    // idades["João"] = 31  // ERRO de compilação
+
+    // Mapa Mutável
+    val alunos = mutableMapOf<String, Int>()
+    alunos["Pedro"] = 28
+    alunos.put("Ana", 22)
+    alunos.remove("Pedro")
+    // alunos agora contém apenas ("Ana" to 22)
 }
 
-// No Kotlin, podemos reduzir funções de "uma linha" removendo chaves:
-fun somarModerno(a: Int, b: Int) = a + b
 
-// ---------------------------------------------------------
-// 6. INTRODUÇÃO À ORIENTAÇÃO A OBJETOS
-// ---------------------------------------------------------
+// ─────────────────────────────────────────────────────────────────────────────
+// 6. HIGHER-ORDER FUNCTIONS E EXPRESSÕES LAMBDA
+// ─────────────────────────────────────────────────────────────────────────────
+// Funções de ordem superior aceitam outras funções como parâmetro ou as retornam.
+// Lambdas são a forma concisa de escrever funções anônimas.
 
-// Uma Classe básica agrupando dados.
-// Repare que o construtor primário (variáveis nela) já é declarado diretamente nos parênteses!
+fun exemploHigherOrderFunctions() {
+    // map: transforma cada item e retorna uma nova coleção
+    val numeros = listOf(1, 2, 3, 4)
+    val quadrados = numeros.map { it * it }
+    // quadrados = [1, 4, 9, 16]
+
+    // filter: mantém apenas os elementos que satisfazem a condição
+    val todoNumeros = listOf(1, 2, 3, 4, 5, 6)
+    val pares = todoNumeros.filter { it % 2 == 0 }
+    // pares = [2, 4, 6]
+
+    // forEach: executa uma ação para cada elemento
+    val nomes = listOf("Ana", "Bruno", "Carlos")
+    nomes.forEach { println("Olá, $it!") }
+
+    // Encadeamento de operações (pipeline funcional)
+    val resultado = numeros
+        .filter { it > 2 }      // [3, 4]
+        .map { it * 10 }        // [30, 40]
+        .forEach { println(it) }
+}
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 7. ORIENTAÇÃO A OBJETOS — CLASSES E DATA CLASSES
+// ─────────────────────────────────────────────────────────────────────────────
+// Classes agrupam dados e comportamentos.
+// `data class` é ideal para modelos de dados: gera equals, hashCode e toString.
+
 class AlunoNormal(val nome: String, val idade: Int) {
     fun apresentar() {
         println("Olá, me chamo $nome e tenho $idade anos.")
     }
 }
 
-// ---------------------------------------------------------
-// 7. HERANÇA, CONSTRUTORES E POLIMORFISMO
-// ---------------------------------------------------------
-// No Kotlin, TUDO é fechado por padrão (não pode ser herdado).
-// Para permitir Herança, a classe PAI precisa receber o prefixo "open".
+// Data class: usada para representar dados (ex: respostas de API)
+data class Curso(
+    val id: Int,
+    val titulo: String,
+    val descricao: String
+)
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 8. HERANÇA, POLIMORFISMO E INTERFACES
+// ─────────────────────────────────────────────────────────────────────────────
+// No Kotlin, classes são fechadas por padrão. Use `open` para permitir herança.
+
 open class UsuarioPlataforma(val id: Int, val nickname: String) {
-    
-    // Funções também precisam ser "open" se quiserem ser sobrescritas no FILHO
     open fun autenticar() {
         println("Autenticando via email e senha padrão...")
     }
 }
 
-// O Filho (AlunoPremium) herda do Pai (UsuarioPlataforma). 
-// Passamos (id, nickname) pro construtor do Pai imediatamente.
 class AlunoPremium(
-    id: Int, 
-    nickname: String, 
+    id: Int,
+    nickname: String,
     val beneficiosVip: Boolean
 ) : UsuarioPlataforma(id, nickname) {
 
-    // Sobrescrevendo a ação padrão do Pai
     override fun autenticar() {
-        super.autenticar() // Chama a lógica antiga primeiro
+        super.autenticar()
         println("Acesso VIP Liberado instantaneamente!")
     }
 }
 
-// ---------------------------------------------------------
-// 8. INTERFACES (Contratos de Ações)
-// ---------------------------------------------------------
-// Interfaces definem REGRA! Uma interface força quem herda ela 
-// a implementar os métodos descritos obrigatoriamente.
+// Interface: define um contrato de ações que a classe DEVE implementar
 interface NavegadorDeCursos {
     fun abrirAula(id: Int)
     fun finalizarCurso()
 }
 
-// Uma classe implementando (herdando) a Interface
 class AppCliente : NavegadorDeCursos {
     override fun abrirAula(id: Int) {
-        println("Buscando vídeo da aula $id no Render/Backend...")
+        println("Buscando vídeo da aula $id no Backend...")
     }
 
     override fun finalizarCurso() {
         println("Parabéns, emitindo certificado em PDF!")
     }
+}
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// ATIVIDADE PRÁTICA — Manipulação de Dados em uma Lista
+// ─────────────────────────────────────────────────────────────────────────────
+// Objetivo: usar os conceitos acima para resolver um problema real.
+//
+// Tarefa:
+// 1. Crie uma lista mutável de nomes de alunos.
+// 2. Adicione 3 alunos à lista.
+// 3. Use filter para manter apenas os nomes com mais de 4 letras.
+// 4. Use map para deixar todos os nomes em maiúsculo.
+// 5. Use forEach para imprimir cada nome no console.
+
+fun atividadePratica() {
+    val alunos = mutableListOf("Ana", "Bruno", "Carlos", "Bia", "Fernanda")
+
+    alunos
+        .filter { it.length > 4 }
+        .map { it.uppercase() }
+        .forEach { println(it) }
+
+    // Saída esperada:
+    // BRUNO
+    // CARLOS
+    // FERNANDA
 }
