@@ -3,12 +3,8 @@ package com.fatec.merge_skills.basics
 /**
  * ==========================================================
  * AULA 01 - FUNDAMENTOS DE KOTLIN
- * Referência: https://fatec-registro-yuri-villanova.github.io/docs/DSM5%20%7C%20PDMII/1.%20Fundamentos/
  * ==========================================================
  *
- * Este arquivo serve como material didático de referência.
- * Cada seção cobre um conceito fundamental da linguagem Kotlin
- * que será utilizado ao longo do curso de Android Nativo.
  */
 
 
