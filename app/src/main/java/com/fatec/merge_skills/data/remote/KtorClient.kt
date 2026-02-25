@@ -9,6 +9,7 @@ import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
+import java.util.TimeZone
 
 /**
  * Cliente HTTP Base configurado com Ktor.
@@ -30,6 +31,7 @@ object KtorClient {
             contentType(ContentType.Application.Json)
             header("apikey", ApiConfig.SUPABASE_KEY)
             header("Authorization", "Bearer ${ApiConfig.SUPABASE_KEY}")
+            header("X-Timezone", TimeZone.getDefault().id)
         }
     }
 }

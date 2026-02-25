@@ -1,14 +1,15 @@
 package com.fatec.merge_skills.ui.screens.auth
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
@@ -32,10 +33,31 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 
+/**
+ * Logo central da marca MergeSkills.
+ * Exibe a letra "M" com a tipografia Display Large na cor primária (StitchGreen).
+ */
+@Composable
+fun MergeSkillsLogo() {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Text(
+            text = "M",
+            style = MaterialTheme.typography.displayLarge,
+            color = MaterialTheme.colorScheme.primary
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = "MergeSkills",
+            style = MaterialTheme.typography.headlineLarge,
+            color = MaterialTheme.colorScheme.onBackground
+        )
+    }
+}
+
 @Composable
 fun SplashScreen(onSplashFinished: () -> Unit) {
     LaunchedEffect(key1 = true) {
-        delay(2000) // 2 sec fake load
+        delay(2000)
         onSplashFinished()
     }
 
@@ -45,20 +67,7 @@ fun SplashScreen(onSplashFinished: () -> Unit) {
             .background(MaterialTheme.colorScheme.background),
         contentAlignment = Alignment.Center
     ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Icon(
-                imageVector = Icons.Default.Person,
-                contentDescription = "Logo Merge",
-                tint = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.size(100.dp)
-            )
-            Text(
-                "Merge Skills",
-                style = MaterialTheme.typography.displayLarge,
-                color = MaterialTheme.colorScheme.onBackground,
-                modifier = Modifier.padding(top = 16.dp)
-            )
-        }
+        MergeSkillsLogo()
     }
 }
 
@@ -98,10 +107,11 @@ fun LoginScreen(
             value = email,
             onValueChange = { 
                 email = it
-                viewModel.resetError() // Limpa o erro se tentar digitar novo user
+                viewModel.resetError()
             },
             label = { Text("E-mail") },
             leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) },
+            shape = RoundedCornerShape(12.dp),
             modifier = Modifier.fillMaxWidth(),
             singleLine = true
         )
@@ -112,6 +122,7 @@ fun LoginScreen(
             label = { Text("Senha") },
             leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
             visualTransformation = PasswordVisualTransformation(),
+            shape = RoundedCornerShape(12.dp),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 16.dp),
@@ -192,6 +203,7 @@ fun RegisterScreen(
                 viewModel.resetError()
             },
             label = { Text("Nome Completo") },
+            shape = RoundedCornerShape(12.dp),
             modifier = Modifier.fillMaxWidth(),
             singleLine = true
         )
@@ -200,6 +212,7 @@ fun RegisterScreen(
             value = email,
             onValueChange = { email = it },
             label = { Text("E-mail") },
+            shape = RoundedCornerShape(12.dp),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 16.dp),
@@ -211,6 +224,7 @@ fun RegisterScreen(
             onValueChange = { password = it },
             label = { Text("Senha") },
             visualTransformation = PasswordVisualTransformation(),
+            shape = RoundedCornerShape(12.dp),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 16.dp),

@@ -1,7 +1,9 @@
 package com.fatec.merge_skills.ui.screens.auth
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.fatec.merge_skills.data.local.TokenDataStore
 import com.fatec.merge_skills.data.remote.ApiConfig
 import com.fatec.merge_skills.data.remote.KtorClient
 import com.fatec.merge_skills.domain.models.AuthResponse
@@ -21,7 +23,11 @@ data class AuthUiState(
     val errorMessage: String? = null
 )
 
-class AuthViewModel : ViewModel() {
+/**
+ * ViewModel de autenticação.
+ * Persiste o token de sessão no DataStore após login/registro bem-sucedido (Spec 6.4).
+ */
+class AuthViewModel(application: Application) : AndroidViewModel(application) {
     private val _uiState = MutableStateFlow(AuthUiState())
     val uiState: StateFlow<AuthUiState> = _uiState.asStateFlow()
 
@@ -34,10 +40,14 @@ class AuthViewModel : ViewModel() {
                     setBody(requestBody)
                 }.body()
 
-                // Sucesso: API retornou o objeto AuthResponse (token + user)
+                // Persiste o token no DataStore (Spec 6.4)
+                response.token?.let { token ->
+                    TokenDataStore.saveToken(getApplication(), token)
+                }
+
                 _uiState.value = AuthUiState(isSuccess = true)
             } catch (e: Exception) {
-                e.printStackTrace() // Logar o erro real para depuração (Logcat)
+                e.printStackTrace()
                 _uiState.value = AuthUiState(
                     isLoading = false,
                     errorMessage = "Erro ao entrar: Verifique suas credenciais."
@@ -55,10 +65,14 @@ class AuthViewModel : ViewModel() {
                     setBody(requestBody)
                 }.body()
 
-                // Sucesso: API criou o usuário e retornou AuthResponse
+                // Persiste o token no DataStore (Spec 6.4)
+                response.token?.let { token ->
+                    TokenDataStore.saveToken(getApplication(), token)
+                }
+
                 _uiState.value = AuthUiState(isSuccess = true)
             } catch (e: Exception) {
-                e.printStackTrace() // Logar o erro real para depuração (Logcat)
+                e.printStackTrace()
                 _uiState.value = AuthUiState(
                     isLoading = false,
                     errorMessage = "Erro ao cadastrar: E-mail já existe ou falha na rede."
@@ -72,7 +86,7 @@ class AuthViewModel : ViewModel() {
             _uiState.value = _uiState.value.copy(errorMessage = null)
         }
     }
-    
+
     fun resetSuccess() {
         _uiState.value = _uiState.value.copy(isSuccess = false)
     }

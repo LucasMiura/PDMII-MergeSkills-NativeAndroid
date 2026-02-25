@@ -60,6 +60,9 @@ dependencies {
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
 
+    // DataStore — Token Persistence (Spec 6.4)
+    implementation("androidx.datastore:datastore-preferences:1.1.1")
+
     // Ktor Network Client & Serialization
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.android)
