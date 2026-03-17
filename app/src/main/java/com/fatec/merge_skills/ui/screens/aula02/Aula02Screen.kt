@@ -34,10 +34,30 @@ data class UserProfile(
 
 @Composable
 fun Aula02Screen(modifier: Modifier = Modifier) {
-    // Lista de Data Classes para simulação
+    // 1. ESTADO INTERNO (Stateful Composable)
+    // O estado 'activeProfile' é gerenciado aqui e "elevado" (hoisted)
+    // para os componentes filhos que precisam apenas exibir os dados.
     var activeProfile by remember {
         mutableStateOf(UserProfile("Aluno MergeSkills", "Developer"))
     }
+
+    // Chamada do conteúdo passando o estado e o evento de mudança (State Hoisting)
+    UserProfileContent(
+        profile = activeProfile,
+        onProfileChange = { newProfile -> activeProfile = newProfile },
+        modifier = modifier
+    )
+}
+
+@Composable
+fun UserProfileContent(
+    profile: UserProfile,
+    onProfileChange: (UserProfile) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    // 2. STATELESS COMPOSABLE
+    // Este componente não "lembra" de nada, apenas reage aos parâmetros.
+    // Isso facilita testes e reuso em diferentes contextos.
 
     Column(
         modifier = modifier
@@ -66,7 +86,7 @@ fun Aula02Screen(modifier: Modifier = Modifier) {
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = activeProfile.name.take(1).uppercase(),
+                    text = profile.name.take(1).uppercase(),
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onPrimary
                 )
@@ -76,13 +96,13 @@ fun Aula02Screen(modifier: Modifier = Modifier) {
 
             Column {
                 Text(
-                    text = activeProfile.name,
+                    text = profile.name,
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onBackground
                 )
-                // Usando SafeCall e Let para renderizar o subtítulo
+                // Usando SafeCall e Elvis para renderizar o subtítulo
                 Text(
-                    text = activeProfile.role?.uppercase() ?: "SEM CARGO",
+                    text = profile.role?.uppercase() ?: "SEM CARGO",
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -91,11 +111,10 @@ fun Aula02Screen(modifier: Modifier = Modifier) {
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // Demonstração de Lambda Expressions
+        // Botões que disparam eventos para o componente "Pai" (Stateful)
         Button(
             onClick = {
-                // Lambda action update state
-                activeProfile = UserProfile("Visitante", null)
+                onProfileChange(UserProfile("Visitante", null))
             },
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(
@@ -110,8 +129,7 @@ fun Aula02Screen(modifier: Modifier = Modifier) {
 
         Button(
             onClick = {
-                // Lambda action update state
-                activeProfile = UserProfile("Aluno Vip", "Senior Android Dev")
+                onProfileChange(UserProfile("Aluno Vip", "Senior Android Dev"))
             },
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(
@@ -123,3 +141,4 @@ fun Aula02Screen(modifier: Modifier = Modifier) {
         }
     }
 }
+
