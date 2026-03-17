@@ -16,30 +16,34 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import android.os.Parcelable
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import kotlinx.parcelize.Parcelize
 
 // Exemplo da Aula 02 - Data Classes, Lambdas, SafeCalls e Componentes visuais
+@Parcelize
 data class UserProfile(
     val name: String,
     val role: String? // Nullable para demonstrar SafeCall ?.
-)
+) : Parcelable
 
 @Composable
 fun Aula02Screen(modifier: Modifier = Modifier) {
     // 1. ESTADO INTERNO (Stateful Composable)
-    // O estado 'activeProfile' é gerenciado aqui e "elevado" (hoisted)
-    // para os componentes filhos que precisam apenas exibir os dados.
-    var activeProfile by remember {
+    // Usamos 'rememberSaveable' em vez de 'remember' para que o estado
+    // sobreviva a mudanças de configuração (como rotacionar a tela).
+    var activeProfile by rememberSaveable {
         mutableStateOf(UserProfile("Aluno MergeSkills", "Developer"))
     }
+
 
     // Chamada do conteúdo passando o estado e o evento de mudança (State Hoisting)
     UserProfileContent(
